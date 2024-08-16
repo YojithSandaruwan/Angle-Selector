@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Angle Selector</title>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        function AngleSelector() {
+            const [angle, setAngle] = useState(0);
+
+            const handleAngleChange = (newAngle) => {
+                const normalizedAngle = ((newAngle % 360) + 360) % 360;
+                setAngle(Math.round(normalizedAngle));
+            };
+
+            const presetAngles = [0, 45, 60, 90, 180];
+
+            return (
+                <div className="container mt-5">
+                    <h2 className="mb-4">Angle Selector</h2>
+                    <div className="mb-3">
+                        <label htmlFor="angleInput" className="form-label">Angle:</label>
+                        <input
+                            type="number"
+                            id="angleInput"
+                            className="form-control"
+                            value={angle}
+                            onChange={(e) => handleAngleChange(Number(e.target.value))}
+                            min={0}
+                            max={360}
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <input
+                            type="range"
+                            className="form-range"
+                            value={angle}
+                            onChange={(e) => handleAngleChange(Number(e.target.value))}
+                            min={0}
+                            max={360}
+                        />
+                    </div>
+                    <div className="btn-group" role="group" aria-label="Angle presets">
+                        {presetAngles.map((presetAngle) => (
+                            <React.Fragment key={presetAngle}>
+                                <input
+                                    type="radio"
+                                    className="btn-check"
+                                    name="anglePreset"
+                                    id={`angle${presetAngle}`}
+                                    checked={angle === presetAngle}
+                                    onChange={() => handleAngleChange(presetAngle)}
+                                />
+                                <label className="btn btn-outline-primary" htmlFor={`angle${presetAngle}`}>
+                                    {presetAngle}°
+                                </label>
+                            </React.Fragment>
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<AngleSelector />, document.getElementById('root'));
+    </script>
+</body>
+</html>
